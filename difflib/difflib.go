@@ -586,11 +586,11 @@ func WriteUnifiedDiff(writer io.Writer, diff UnifiedDiff) error {
 				toDate = "\t" + diff.ToDate
 			}
 			if diff.FromFile != "" || diff.ToFile != "" {
-				err := wf("--- %s%s%s", diff.FromFile, fromDate, diff.Eol)
+				err := wf(`<font color="red">--- %s%s%s</font><br>`, diff.FromFile, fromDate, diff.Eol)
 				if err != nil {
 					return err
 				}
-				err = wf("+++ %s%s%s", diff.ToFile, toDate, diff.Eol)
+				err = wf(`<font color="green">+++ %s%s%s</font><br>`, diff.ToFile, toDate, diff.Eol)
 				if err != nil {
 					return err
 				}
@@ -599,14 +599,14 @@ func WriteUnifiedDiff(writer io.Writer, diff UnifiedDiff) error {
 		first, last := g[0], g[len(g)-1]
 		range1 := formatRangeUnified(first.I1, last.I2)
 		range2 := formatRangeUnified(first.J1, last.J2)
-		if err := wf("@@ -%s +%s @@%s", range1, range2, diff.Eol); err != nil {
+		if err := wf("<b>@@ -%s +%s @@%s</b><br>", range1, range2, diff.Eol); err != nil {
 			return err
 		}
 		for _, c := range g {
 			i1, i2, j1, j2 := c.I1, c.I2, c.J1, c.J2
 			if c.Tag == 'e' {
 				for _, line := range diff.A[i1:i2] {
-					if err := ws(" " + line); err != nil {
+					if err := ws(" " + line + "<br>"); err != nil {
 						return err
 					}
 				}
@@ -614,14 +614,14 @@ func WriteUnifiedDiff(writer io.Writer, diff UnifiedDiff) error {
 			}
 			if c.Tag == 'r' || c.Tag == 'd' {
 				for _, line := range diff.A[i1:i2] {
-					if err := ws("-" + line); err != nil {
+					if err := ws(`<font color="red">-` + line + `</font><br>`); err != nil {
 						return err
 					}
 				}
 			}
 			if c.Tag == 'r' || c.Tag == 'i' {
 				for _, line := range diff.B[j1:j2] {
-					if err := ws("+" + line); err != nil {
+					if err := ws(`<font color="green">+` + line + `</font><br>`); err != nil {
 						return err
 					}
 				}
@@ -713,8 +713,8 @@ func WriteContextDiff(writer io.Writer, diff ContextDiff) error {
 				toDate = "\t" + diff.ToDate
 			}
 			if diff.FromFile != "" || diff.ToFile != "" {
-				wf(`<font color="red">*** %s%s%s</font>`, diff.FromFile, fromDate, diff.Eol)
-				wf(`<font color="green">--- %s%s%s</font>`, diff.ToFile, toDate, diff.Eol)
+				wf(`*** %s%s%s`, diff.FromFile, fromDate, diff.Eol)
+				wf(`--- %s%s%s`, diff.ToFile, toDate, diff.Eol)
 			}
 		}
 
