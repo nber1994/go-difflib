@@ -713,8 +713,8 @@ func WriteContextDiff(writer io.Writer, diff ContextDiff) error {
 				toDate = "\t" + diff.ToDate
 			}
 			if diff.FromFile != "" || diff.ToFile != "" {
-				wf("*** %s%s%s", diff.FromFile, fromDate, diff.Eol)
-				wf("--- %s%s%s", diff.ToFile, toDate, diff.Eol)
+				wf(`<font color="red">*** %s%s%s</font>`, diff.FromFile, fromDate, diff.Eol)
+				wf(`<font color="green">--- %s%s%s</font>`, diff.ToFile, toDate, diff.Eol)
 			}
 		}
 
